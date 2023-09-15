@@ -2,4 +2,7 @@
     <string name="app_name">ShopEaze</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="string_empty_cart">Nothing in cart\n Add something to continue</string>
+    <string name="string_proceed_button_text">Proceed to checkout</string>
 </resources>

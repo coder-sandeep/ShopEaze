@@ -1,60 +1,90 @@
 package com.codersandeep.shopeaze.ui.details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.codersandeep.shopeaze.R
+import com.codersandeep.shopeaze.databinding.FragmentDetailsBinding
+import com.codersandeep.shopeaze.databinding.FragmentHomeBinding
+import com.codersandeep.shopeaze.models.ProductsItem
+import com.codersandeep.shopeaze.ui.adapters.HomeReAdapter
+import com.codersandeep.shopeaze.utils.Constants.LOG_TAG
+import com.codersandeep.shopeaze.utils.ProductResponse
+import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class DetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding get() = _binding!!
+    private val args : DetailsFragmentArgs by navArgs()
+    private val detailsViewModel by viewModels<DetailsViewModel>()
+    private lateinit var currentProduct : ProductsItem
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details, container, false)
-    }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        _binding = FragmentDetailsBinding.inflate(inflater,container,false)
+
+        //Log.d(LOG_TAG,"frag fetching..."+args.productId)
+        detailsViewModel.getSingleProduct(args.productId+1)
+        detailsViewModel.getProductById(args.productId+1).observe(viewLifecycleOwner){
+            if(it != null) {
+                binding.gotoCartButton.visibility = View.VISIBLE
+            }
+        }
+
+
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.gotoCartButton.setOnClickListener(){
+            val action = DetailsFragmentDirections.actionDetailsFragmentToCartFragment()
+            findNavController().navigate(action)
+        }
+        detailsViewModel.singleProductLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is ProductResponse.Error -> {Log.d(LOG_TAG,"error")}
+                is ProductResponse.Success -> {
+
+                    currentProduct = it.data!!
+                   binding.loadingProgressBar.visibility = View.INVISIBLE
+                    binding.productDetailsWrapper.visibility = View.VISIBLE
+                    Picasso.get()
+                        .load(it.data.image)
+                        .error(R.drawable.ic_brokenimage)
+                        .into(binding.productImage)
+                    binding.productTitle.text = currentProduct.title
+                    binding.productPrice.text = "$ "+currentProduct.price
+                    binding.productDesciption.text = currentProduct.description
+                }
+                is ProductResponse.Loading -> {
+                    binding.loadingProgressBar.visibility = View.VISIBLE
+                    binding.productDetailsWrapper.visibility = View.INVISIBLE
                 }
             }
+
+            binding.addToCartButton.setOnClickListener{
+                detailsViewModel.saveProduct(currentProduct)
+                Toast.makeText(context,"Item added to cart",Toast.LENGTH_LONG).show()
+            }
+
+            view.findViewById<TextView>(R.id.details_text).text = it.data.toString()
+        }
     }
 }

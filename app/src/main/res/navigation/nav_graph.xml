@@ -9,7 +9,13 @@
         android:id="@+id/homeFragment"
         android:name="com.codersandeep.shopeaze.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.codersandeep.shopeaze.ui.cart.CartFragment"
@@ -18,4 +24,18 @@
         android:id="@+id/profileFragment"
         android:name="com.codersandeep.shopeaze.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.codersandeep.shopeaze.ui.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_detailsFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/detailsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

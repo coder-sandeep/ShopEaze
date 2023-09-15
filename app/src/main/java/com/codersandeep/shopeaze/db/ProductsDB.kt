@@ -1,4 +1,4 @@
-package com.codersandeep.shopeaze.di
+package com.codersandeep.shopeaze.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
