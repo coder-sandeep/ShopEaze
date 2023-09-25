@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codersandeep.shopeaze.models.ProductsItem
 import com.codersandeep.shopeaze.repository.ProductsRepository
-import com.codersandeep.shopeaze.utils.ProductResponse
+import com.codersandeep.shopeaze.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor (private val productsRepository: ProductsRepository) : ViewModel() {
 
-    val productsLiveData : LiveData<ProductResponse<List<ProductsItem>>>
+    val productsLiveData : LiveData<NetworkResponse<List<ProductsItem>>>
     get() = productsRepository.productsLiveData
 
     fun getAllProducts() {

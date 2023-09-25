@@ -6,15 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.codersandeep.shopeaze.R
 import com.codersandeep.shopeaze.databinding.FragmentHomeBinding
 import com.codersandeep.shopeaze.ui.adapters.HomeReAdapter
 import com.codersandeep.shopeaze.utils.Constants.LOG_TAG
-import com.codersandeep.shopeaze.utils.ProductResponse
+import com.codersandeep.shopeaze.utils.NetworkResponse
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,13 +37,13 @@ class HomeFragment : Fragment(), HomeReAdapter.RecyclerViewEvent {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.productsLiveData.observe(viewLifecycleOwner) {
             when (it) {
-                is ProductResponse.Error -> {Log.d(LOG_TAG,"error")}
-                is ProductResponse.Success -> {
+                is NetworkResponse.Error -> {Log.d(LOG_TAG,"error")}
+                is NetworkResponse.Success -> {
                     Log.d(LOG_TAG,"success")
                     binding.recyclerviewHome.adapter = HomeReAdapter(it.data!!,this)
                     binding.recyclerviewHome.layoutManager = GridLayoutManager(context,2)
                 }
-                is ProductResponse.Loading -> {Log.d(LOG_TAG,"loading...")}
+                is NetworkResponse.Loading -> {Log.d(LOG_TAG,"loading...")}
             }
         }
     }

@@ -11,14 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.codersandeep.shopeaze.R
 import com.codersandeep.shopeaze.databinding.FragmentDetailsBinding
-import com.codersandeep.shopeaze.databinding.FragmentHomeBinding
 import com.codersandeep.shopeaze.models.ProductsItem
-import com.codersandeep.shopeaze.ui.adapters.HomeReAdapter
 import com.codersandeep.shopeaze.utils.Constants.LOG_TAG
-import com.codersandeep.shopeaze.utils.ProductResponse
+import com.codersandeep.shopeaze.utils.NetworkResponse
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,8 +56,8 @@ class DetailsFragment : Fragment() {
         }
         detailsViewModel.singleProductLiveData.observe(viewLifecycleOwner) {
             when (it) {
-                is ProductResponse.Error -> {Log.d(LOG_TAG,"error")}
-                is ProductResponse.Success -> {
+                is NetworkResponse.Error -> {Log.d(LOG_TAG,"error")}
+                is NetworkResponse.Success -> {
 
                     currentProduct = it.data!!
                    binding.loadingProgressBar.visibility = View.INVISIBLE
@@ -73,7 +70,7 @@ class DetailsFragment : Fragment() {
                     binding.productPrice.text = "$ "+currentProduct.price
                     binding.productDesciption.text = currentProduct.description
                 }
-                is ProductResponse.Loading -> {
+                is NetworkResponse.Loading -> {
                     binding.loadingProgressBar.visibility = View.VISIBLE
                     binding.productDetailsWrapper.visibility = View.INVISIBLE
                 }

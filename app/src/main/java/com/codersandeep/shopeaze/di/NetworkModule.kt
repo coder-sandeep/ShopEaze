@@ -1,6 +1,7 @@
 package com.codersandeep.shopeaze.di
 
 import com.codersandeep.shopeaze.api.ProductsAPI
+import com.codersandeep.shopeaze.api.UserAPI
 import com.codersandeep.shopeaze.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -24,5 +25,11 @@ class NetworkModule {
     @Provides
     fun providesProductAPI(retrofit: Retrofit) : ProductsAPI{
         return retrofit.create(ProductsAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providesUserAPI(retrofit: Retrofit) : UserAPI{
+        return retrofit.create(UserAPI::class.java)
     }
 }

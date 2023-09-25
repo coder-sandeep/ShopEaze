@@ -23,7 +23,11 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.codersandeep.shopeaze.ui.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_authActivity"
+            app:destination="@id/authActivity" />
+    </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.codersandeep.shopeaze.ui.details.DetailsFragment"
@@ -38,4 +42,9 @@
             app:popUpTo="@id/detailsFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.codersandeep.shopeaze.AuthActivity"
+        android:label="activity_auth"
+        tools:layout="@layout/activity_auth" />
 </navigation>
